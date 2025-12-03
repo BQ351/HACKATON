@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMail UM - Panel de Administración</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-box-open"></i>
+                <h1>SmartMail<span>UM</span></h1>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Administrador</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <ul>
+            <li class="active">
+                <a href="#"><i class="fas fa-clipboard-list"></i> Paquetería</a>
+            </li>
+            <li>
+                <a href="/HACKATON/Frontend/historial.html"><i class="fas fa-history"></i> Historial</a>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-chart-bar"></i> Estadísticas</a>
+            </li>
+            <li>
+                <a href="/HACKATON/Frontend/usuarios.html"><i class="fas fa-users"></i> Usuarios</a>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-cog"></i> Configuración</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <div class="content-header">
+            <h2><i class="fas fa-clipboard-list"></i> Paquetería</h2>
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscar-pedido" placeholder="Buscar pedido...">
+                </div>
+                <button class="btn-agregar" onclick="abrirModal()">
+                    <i class="fas fa-plus-circle"></i> Agregar Pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #4a6fa5;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="total-pendientes">0</h3>
+                    <p>Pendientes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #38a3a5;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="total-llegados">0</h3>
+                    <p>Notificados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #6f42c1;">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="total-entregados">0</h3>
+                    <p>Entregados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: #20c997;">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="total-hoy">0</h3>
+                    <p>Hoy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha Recibido</th>
+                        <th>Paquetería</th>
+                        <th># de Guía</th>
+                        <th>Recibe (Destinatario)</th>
+                        <th>Remitente</th>
+                        <th>Anaquel</th>
+                        <th>Ubicación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-pedidos">
+                    <!-- Aquí se insertan los pedidos con JS -->
+                </tbody>
+            </table>
+            
+            <div class="table-footer">
+                <div class="table-info">
+                    Mostrando <span id="pedidos-mostrados">0</span> de <span id="pedidos-totales">0</span> pedidos
+                </div>
+                <div class="pagination">
+                    <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                    <span class="current-page">1</span>
+                    <button class="pagination-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Agregar Pedido -->
+    <div id="modal" class="modal">
+        <div class="modal-contenido" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-box"></i> Agregar Nuevo Pedido</h3>
+                <button class="btn-cerrar-modal" onclick="cerrarModal()">&times;</button>
+            </div>
+            
+            <form id="form-pedido">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha Recibido:</label>
+                        <input type="date" id="fecha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paqueteria"><i class="fas fa-truck"></i> Paquetería:</label>
+                        <select id="paqueteria" required>
+                            <option value="">Seleccionar</option>
+                            <option value="DHL">DHL</option>
+                            <option value="FedEx">FedEx</option>
+                            <option value="UPS">UPS</option>
+                            <option value="Estafeta">Estafeta</option>
+                            <option value="Redpack">Redpack</option>
+                            <option value="Redpack">SHEIN</option>
+                            <option value="Amazon">Amazon</option>
+                            <option value="Correos de México">Correos de México</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="guia"><i class="fas fa-barcode"></i> # de Guía:</label>
+                    <input type="text" id="guia" required placeholder="Número de seguimiento/guía">
+                </div>
+
+                <div class="form-group">
+                    <label for="destinatario"><i class="fas fa-user"></i> Destinatario:</label>
+                    <input type="text" id="destinatario" required placeholder="Nombre del dueño del paquete">
+                </div>
+                
+                <div class="form-row">                    
+                    <div class="form-group">
+                        <label for="remitente"><i class="fas fa-user-tag"></i> Id:</label>
+                        <input type="text" id="remitente" required placeholder="Id del administrador">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="remitente"><i class="fas fa-user"></i> Nombre de proveedor:</label>
+                        <input type="text" id="remitente" required placeholder="Nombre del proveedor">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="anaquel"><i class="fas fa-layer-group"></i> Anaquel:</label>
+                        <input type="text" id="anaquel" required placeholder="Ej: A1, B3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ubicacion"><i class="fas fa-map-marker-alt"></i> Ubicación:</label>
+                        <input type="text" id="ubicacion" placeholder="Edificio/Área (opcional)">
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" onclick="guardarPedido()" class="btn-guardar">
+                        <i class="fas fa-save"></i> Guardar Pedido
+                    </button>
+                    <button type="button" onclick="cerrarModal()" class="btn-cancelar">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast para notificaciones -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Array vacío para que agregues los pedidos manualmente
+        let pedidos = [];
+        let pedidoIdCounter = 1;
+
+        // Función para cargar pedidos al inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarPedidos();
+            actualizarEstadisticas();
+            establecerFechaActual();
+        });
+
+        // Establecer fecha actual en el formulario
+        function establecerFechaActual() {
+            const fechaInput = document.getElementById('fecha');
+            const hoy = new Date().toISOString().split('T')[0];
+            fechaInput.value = hoy;
+        }
+
+        // Cargar y mostrar pedidos en la tabla
+        function cargarPedidos() {
+            const tbody = document.getElementById('tabla-pedidos');
+            tbody.innerHTML = '';
+
+            if (pedidos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: #ccc;"></i>
+                            <p style="margin-top: 10px; color: #999;">No hay pedidos registrados</p>
+                            <p style="color: #999; font-size: 14px;">Haz clic en "Agregar Pedido" para comenzar</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            pedidos.forEach(pedido => {
+                const tr = document.createElement('tr');
+                
+                let estadoClass = '';
+                let estadoTexto = '';
+                
+                switch(pedido.estado) {
+                    case 'pendiente':
+                        estadoClass = 'estado-pendiente';
+                        estadoTexto = '<i class="fas fa-clock"></i> Pendiente';
+                        break;
+                    case 'llegado':
+                        estadoClass = 'estado-llegado';
+                        estadoTexto = '<i class="fas fa-check-circle"></i> Notificado';
+                        break;
+                    case 'entregado':
+                        estadoClass = 'estado-entregado';
+                        estadoTexto = '<i class="fas fa-box-open"></i> Entregado';
+                        break;
+                }
+
+                tr.innerHTML = `
+                    <td>${formatearFecha(pedido.fecha_recibido)}</td>
+                    <td><span class="badge badge-paqueteria">${pedido.paqueteria}</span></td>
+                    <td><strong>${pedido.numero_guia}</strong></td>
+                    <td>${pedido.destinatario}</td>
+                    <td>${pedido.remitente}</td>
+                    <td><span class="badge-anaquel"><i class="fas fa-layer-group"></i> ${pedido.anaquel}</span></td>
+                    <td><span> ${pedido.ubicacion}</span></td>
+                    <td><span class="estado ${estadoClass}">${estadoTexto}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            ${pedido.estado === 'pendiente' ? `
+                                <button class="btn-action btn-notificar" onclick="abrirModalNotificar(${pedido.id})" title="Notificar llegada">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            ` : ''}
+                            ${pedido.estado === 'llegado' ? `
+                                <button class="btn-action btn-entregar" onclick="abrirModalEntrega(${pedido.id})" title="Confirmar entrega">
+                                    <i class="fas fa-hand-holding-box"></i>
+                                </button>
+                            ` : ''}
+                            ${pedido.estado === 'entregado' ? `
+                                <span class="badge-entregado-check" title="Entregado el ${formatearFecha(pedido.fecha_entrega)}">
+                                    <i class="fas fa-check-double"></i> ${formatearFecha(pedido.fecha_entrega)}
+                                </span>
+                            ` : ''}
+                            <button class="btn-action btn-ver" onclick="verDetalle(${pedido.id})" title="Ver detalle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-action btn-eliminar" onclick="eliminarPedido(${pedido.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('pedidos-mostrados').textContent = pedidos.length;
+            document.getElementById('pedidos-totales').textContent = pedidos.length;
+        }
+
+        // Formatear fecha
+        function formatearFecha(fecha) {
+            const date = new Date(fecha + 'T00:00:00');
+            const dia = date.getDate();
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const mes = meses[date.getMonth()];
+            return `${dia} ${mes}`;
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
+            const llegados = pedidos.filter(p => p.estado === 'llegado').length;
+            const entregados = pedidos.filter(p => p.estado === 'entregado').length;
+            
+            const hoy = new Date().toISOString().split('T')[0];
+            const pedidosHoy = pedidos.filter(p => p.fecha_recibido === hoy).length;
+
+            document.getElementById('total-pendientes').textContent = pendientes;
+            document.getElementById('total-llegados').textContent = llegados;
+            document.getElementById('total-entregados').textContent = entregados;
+            document.getElementById('total-hoy').textContent = pedidosHoy;
+        }
+
+        // Abrir modal para agregar pedido
+        function abrirModal() {
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('form-pedido').reset();
+            establecerFechaActual();
+        }
+
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Guardar pedido
+        function guardarPedido() {
+            const fecha_recibido = document.getElementById('fecha').value;
+            const paqueteria = document.getElementById('paqueteria').value;
+            const numero_guia = document.getElementById('guia').value.trim();
+            const destinatario = document.getElementById('destinatario').value.trim();
+            const remitente = document.getElementById('remitente').value.trim();
+            const anaquel = document.getElementById('anaquel').value.trim().toUpperCase();
+            const ubicacion = document.getElementById('ubicacion').value.trim();
+
+            if (!fecha_recibido || !paqueteria || !numero_guia || !destinatario || !remitente || !anaquel) {
+                mostrarToast('Por favor, completa todos los campos obligatorios', 'error');
+                return;
+            }
+
+            const existente = pedidos.find(p => p.numero_guia === numero_guia);
+            if (existente) {
+                mostrarToast('Este número de guía ya está registrado', 'error');
+                return;
+            }
+
+            const nuevoPedido = {
+                id: pedidoIdCounter++,
+                fecha_recibido: fecha_recibido,
+                paqueteria: paqueteria,
+                numero_guia: numero_guia,
+                destinatario: destinatario,
+                remitente: remitente,
+                anaquel: anaquel,
+                ubicacion: ubicacion,
+                estado: 'pendiente',
+                hora_recogida: null,
+                dia_recogida: null,
+                fecha_entrega: null,
+                responsable_entrega: null
+            };
+
+            pedidos.unshift(nuevoPedido);
+
+            cargarPedidos();
+            actualizarEstadisticas();
+            cerrarModal();
+            
+            mostrarToast('✅ Pedido agregado exitosamente', 'success');
+        }
+
+        // Abrir modal para notificar
+        function abrirModalNotificar(id) {
+            const pedido = pedidos.find(p => p.id === id);
+            if (!pedido) return;
+
+            const modalHTML = `
+                <div id="modal-notificar" class="modal active">
+                    <div class="modal-contenido">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-bell"></i> Notificar Llegada</h3>
+                            <button class="btn-cerrar-modal" onclick="cerrarModalNotificar()">&times;</button>
+                        </div>
+                        
+                        <div class="pedido-info">
+                            <p><strong>Destinatario:</strong> ${pedido.destinatario}</p>
+                            <p><strong>Remitente:</strong> ${pedido.remitente}</p>
+                            <p><strong># Guía:</strong> ${pedido.numero_guia}</p>
+                            <p><strong>Paquetería:</strong> ${pedido.paqueteria}</p>
+                            <p><strong>Anaquel:</strong> ${pedido.anaquel}</p>
+                        </div>
+
+                        <form id="form-notificar">
+                            <div class="form-group">
+                                <label for="dia-recogida"><i class="fas fa-calendar"></i> Día de Recogida:</label>
+                                <input type="date" id="dia-recogida" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hora-recogida"><i class="fas fa-clock"></i> Hora de Recogida:</label>
+                                <input type="time" id="hora-recogida" required>
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="button" onclick="enviarNotificacion(${id})" class="btn-guardar">
+                                    <i class="fas fa-paper-plane"></i> Enviar Notificación
+                                </button>
+                                <button type="button" onclick="cerrarModalNotificar()" class="btn-cancelar">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            const modalExistente = document.getElementById('modal-notificar');
+            if (modalExistente) {
+                modalExistente.remove();
+            }
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('dia-recogida').min = hoy;
+            document.getElementById('dia-recogida').value = hoy;
+        }
+
+        // Cerrar modal de notificación
+        function cerrarModalNotificar() {
+            const modal = document.getElementById('modal-notificar');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Enviar notificación
+        function enviarNotificacion(id) {
+            const dia_recogida = document.getElementById('dia-recogida').value;
+            const hora_recogida = document.getElementById('hora-recogida').value;
+
+            if (!dia_recogida || !hora_recogida) {
+                mostrarToast('Por favor, completa todos los campos', 'error');
+                return;
+            }
+
+            const pedido = pedidos.find(p => p.id === id);
+            if (pedido) {
+                pedido.estado = 'llegado';
+                pedido.dia_recogida = dia_recogida;
+                pedido.hora_recogida = hora_recogida;
+
+                cargarPedidos();
+                actualizarEstadisticas();
+                cerrarModalNotificar();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Notificación Enviada!',
+                    html: `
+                        <p>Se ha notificado a <strong>${pedido.destinatario}</strong></p>
+                        <p>Paquete en anaquel <strong>${pedido.anaquel}</strong></p>
+                        <p>Fecha de recogida: <strong>${formatearFecha(dia_recogida)} - ${hora_recogida}</strong></p>
+                    `,
+                    confirmButtonColor: '#4a6fa5'
+                });
+            }
+        }
+
+        // Abrir modal para confirmar entrega
+        function abrirModalEntrega(id) {
+            const pedido = pedidos.find(p => p.id === id);
+            if (!pedido) return;
+
+            const modalHTML = `
+                <div id="modal-entrega" class="modal active">
+                    <div class="modal-contenido">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-hand-holding-box"></i> Confirmar Entrega</h3>
+                            <button class="btn-cerrar-modal" onclick="cerrarModalEntrega()">&times;</button>
+                        </div>
+                        
+                        <div class="pedido-info">
+                            <p><strong>Destinatario:</strong> ${pedido.destinatario}</p>
+                            <p><strong>Remitente:</strong> ${pedido.remitente}</p>
+                            <p><strong># Guía:</strong> ${pedido.numero_guia}</p>
+                            <p><strong>Anaquel:</strong> ${pedido.anaquel}</p>
+                        </div>
+
+                        <form id="form-entrega">
+                            <div class="form-group">
+                                <label for="fecha-entrega"><i class="fas fa-calendar-check"></i> Fecha de Entrega:</label>
+                                <input type="date" id="fecha-entrega" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="responsable-entrega"><i class="fas fa-user-check"></i> Nombre de quien recibe:</label>
+                                <input type="text" id="responsable-entrega" required placeholder="Nombre completo">
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <button type="button" onclick="confirmarEntrega(${id})" class="btn-guardar">
+                                    <i class="fas fa-check-double"></i> Confirmar Entrega
+                                </button>
+                                <button type="button" onclick="cerrarModalEntrega()" class="btn-cancelar">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            const modalExistente = document.getElementById('modal-entrega');
+            if (modalExistente) {
+                modalExistente.remove();
+            }
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Establecer fecha actual
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha-entrega').value = hoy;
+            document.getElementById('fecha-entrega').max = hoy; // No permitir fechas futuras
+        }
+
+        // Cerrar modal de entrega
+        function cerrarModalEntrega() {
+            const modal = document.getElementById('modal-entrega');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Confirmar entrega
+        function confirmarEntrega(id) {
+            const fecha_entrega = document.getElementById('fecha-entrega').value;
+            const responsable_entrega = document.getElementById('responsable-entrega').value.trim();
+
+            if (!fecha_entrega || !responsable_entrega) {
+                mostrarToast('Por favor, completa todos los campos', 'error');
+                return;
+            }
+
+            const pedido = pedidos.find(p => p.id === id);
+            if (pedido) {
+                pedido.estado = 'entregado';
+                pedido.fecha_entrega = fecha_entrega;
+                pedido.responsable_entrega = responsable_entrega;
+
+                cargarPedidos();
+                actualizarEstadisticas();
+                cerrarModalEntrega();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Entrega Confirmada!',
+                    html: `
+                        <div style="text-align: left; padding: 15px;">
+                            <p style="margin: 8px 0;"><strong>📦 Paquete entregado a:</strong> ${responsable_entrega}</p>
+                            <p style="margin: 8px 0;"><strong>📅 Fecha de entrega:</strong> ${formatearFecha(fecha_entrega)}</p>
+                            <p style="margin: 8px 0;"><strong>👤 Destinatario:</strong> ${pedido.destinatario}</p>
+                            <p style="margin: 8px 0;"><strong>📦 # Guía:</strong> ${pedido.numero_guia}</p>
+                        </div>
+                    `,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'Cerrar'
+                });
+            }
+        }
+
+        // Ver detalle del pedido
+        function verDetalle(id) {
+            const pedido = pedidos.find(p => p.id === id);
+            if (!pedido) return;
+
+            let detalleHTML = `
+                <div style="text-align: left; padding: 10px;">
+                    <p style="margin: 10px 0;"><strong>📅 Fecha Recibido:</strong> ${formatearFecha(pedido.fecha_recibido)}</p>
+                    <p style="margin: 10px 0;"><strong>🚚 Paquetería:</strong> ${pedido.paqueteria}</p>
+                    <p style="margin: 10px 0;"><strong>📦 # Guía:</strong> ${pedido.numero_guia}</p>
+                    <p style="margin: 10px 0;"><strong>👤 Destinatario:</strong> ${pedido.destinatario}</p>
+                    <p style="margin: 10px 0;"><strong>📤 Remitente:</strong> ${pedido.remitente}</p>
+                    <p style="margin: 10px 0;"><strong>📍 Anaquel:</strong> <span style="background-color: #667eea; padding: 4px 12px; border-radius: 8px; color: white; font-weight: 600;">${pedido.anaquel}</span></p>
+                    ${pedido.ubicacion ? `<p style="margin: 10px 0;"><strong>🏢 Ubicación:</strong> ${pedido.ubicacion}</p>` : ''}
+                    <p style="margin: 10px 0;"><strong>📊 Estado:</strong> <span style="text-transform: uppercase; font-weight: 600;">${pedido.estado}</span></p>
+            `;
+
+            if (pedido.estado === 'llegado' || pedido.estado === 'entregado') {
+                detalleHTML += `
+                    <hr style="margin: 15px 0; border: 1px solid #eee;">
+                    <p style="margin: 10px 0;"><strong>📅 Día de Recogida:</strong> ${formatearFecha(pedido.dia_recogida)}</p>
+                    <p style="margin: 10px 0;"><strong>🕐 Hora de Recogida:</strong> ${pedido.hora_recogida}</p>
+                `;
+            }
+
+            if (pedido.estado === 'entregado') {
+                detalleHTML += `
+                    <hr style="margin: 15px 0; border: 1px solid #eee;">
+                    <p style="margin: 10px 0; color: #28a745;"><strong>✅ Fecha de Entrega:</strong> ${formatearFecha(pedido.fecha_entrega)}</p>
+                    <p style="margin: 10px 0; color: #28a745;"><strong>👤 Recibió:</strong> ${pedido.responsable_entrega}</p>
+                `;
+            }
+
+            detalleHTML += `</div>`;
+
+            Swal.fire({
+                title: '<i class="fas fa-info-circle"></i> Detalles del Pedido',
+                html: detalleHTML,
+                confirmButtonText: 'Cerrar',
+                confirmButtonColor: '#4a6fa5',
+                width: '550px'
+            });
+        }
+
+        // Eliminar pedido
+        function eliminarPedido(id) {
+            const pedido = pedidos.find(p => p.id === id);
+            if (!pedido) return;
+
+            Swal.fire({
+                title: '¿Eliminar pedido?',
+                html: `¿Estás seguro de eliminar el pedido de <strong>${pedido.destinatario}</strong>?<br><small style="color: #dc3545;">Esta acción no se puede deshacer</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+                cancelButtonText: '<i class="fas fa-times"></i> Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const index = pedidos.findIndex(p => p.id === id);
+                    pedidos.splice(index, 1);
+                    
+                    cargarPedidos();
+                    actualizarEstadisticas();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: 'Pedido eliminado correctamente',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        // Mostrar toast de notificación
+        function mostrarToast(mensaje, tipo = 'info') {
+            const iconos = {
+                success: 'success',
+                error: 'error',
+                info: 'info'
+            };
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: iconos[tipo] || 'info',
+                title: mensaje
+            });
+        }
+
+        // Búsqueda de pedidos
+        document.getElementById('buscar-pedido')?.addEventListener('input', function(e) {
+            const busqueda = e.target.value.toLowerCase();
+            const filas = document.querySelectorAll('#tabla-pedidos tr');
+
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(busqueda)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                cerrarModal();
+            }
+            
+            const modalNotificar = document.getElementById('modal-notificar');
+            if (event.target === modalNotificar) {
+                cerrarModalNotificar();
+            }
+
+            const modalEntrega = document.getElementById('modal-entrega');
+            if (event.target === modalEntrega) {
+                cerrarModalEntrega();
+            }
+        }
+    </script>
+</body>
+</html>

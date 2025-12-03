@@ -29,17 +29,17 @@
     <!-- Sidebar -->
     <nav class="sidebar">
         <ul>
-            <li class="active">
-                <a href="#"><i class="fas fa-clipboard-list"></i> Paquetería</a>
-            </li>
             <li>
+                <a href="/HACKATON/Frontend/paqueteria.html"><i class="fas fa-clipboard-list"></i> Paquetería</a>
+            </li>
+            <li class="active">
                 <a href="#"><i class="fas fa-history"></i> Historial</a>
             </li>
             <li>
                 <a href="#"><i class="fas fa-chart-bar"></i> Estadísticas</a>
             </li>
             <li>
-                <a href="#"><i class="fas fa-users"></i> Usuarios</a>
+                <a href="/HACKATON/Frontend/usuarios.html"><i class="fas fa-users"></i> Usuarios</a>
             </li>
             <li>
                 <a href="#"><i class="fas fa-cog"></i> Configuración</a>
@@ -50,7 +50,7 @@
     <!-- Contenido Principal -->
     <main class="main-content">
         <div class="content-header">
-            <h2><i class="fas fa-clipboard-list"></i> Paquetería</h2>
+            <h2><i class="fas fa-clock"></i> Historial</h2>
             <div class="header-actions">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
@@ -113,6 +113,7 @@
                         <th>Recibe (Destinatario)</th>
                         <th>Remitente</th>
                         <th>Anaquel</th>
+                        <th>Ubicación</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -177,8 +178,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="remitente"><i class="fas fa-user-tag"></i> Remitente:</label>
-                    <input type="text" id="remitente" required placeholder="Nombre de quien envía">
+                    <label for="remitente"><i class="fas fa-user-tag"></i> Id:</label>
+                    <input type="text" id="remitente" required placeholder="Id del administrador">
                 </div>
 
                 <div class="form-row">
@@ -274,6 +275,7 @@
                     <td>${pedido.destinatario}</td>
                     <td>${pedido.remitente}</td>
                     <td><span class="badge-anaquel"><i class="fas fa-layer-group"></i> ${pedido.anaquel}</span></td>
+                    <td><span> ${pedido.ubicacion}</span></td>
                     <td><span class="estado ${estadoClass}">${estadoTexto}</span></td>
                     <td>
                         <div class="action-buttons">

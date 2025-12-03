@@ -2,8 +2,8 @@
    VARIABLES Y RESET
 ============================== */
 :root {
-    --primary-color: #4a6fa5;
-    --secondary-color: #38a3a5;
+    --primary-color: #a24aa5;
+    --secondary-color: #6d1352;
     --success-color: #28a745;
     --warning-color: #ffc107;
     --danger-color: #dc3545;
@@ -316,7 +316,7 @@ body {
    BOTONES DE ACCIÓN
 ============================== */
 .btn-agregar {
-    background: linear-gradient(to right, var(--secondary-color), #4ecdc4);
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
     padding: 12px 25px;
@@ -477,7 +477,7 @@ body {
 .modal-contenido {
     background-color: white;
     border-radius: var(--border-radius);
-    width: 450px;
+    width: 550px;
     max-width: 90%;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -571,7 +571,7 @@ body {
 }
 
 .btn-guardar {
-    background: linear-gradient(to right, var(--secondary-color), #4ecdc4);
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
     padding: 12px 25px;
