@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦SmartMail UM - Login UM</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Logo UM fuera del contenedor -->
+     <img src="https://cdn.um.click/logos-um/lineal/" class="um-logo" alt="Logo UM">
+
+<div
+    class="background-image"></div>  
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <!-- Barra superior -->
+            <div class="tabs">
+                <button id="login-tab" class="tab active">Login</button>
+                <button id="register-tab" class="tab">Registro</button>
+            </div>
+
+            <!-- Título SmartMail -->
+            <h2 class="login-title">
+                <i class="fas fa-box-open"></i> SmartMail UM
+            </h2>
+            <p class="login-subtitle">Inicia sesión para continuar</p>
+
+            <!-- ================================ -->
+            <!-- FORM LOGIN -->
+            <!-- ================================ -->
+            <form id="login-form">
+
+                <label for="email">Correo Institucional</label>
+                <input type="email" id="email"
+                    placeholder="usuario@um.edu.mx" required>
+
+                <label for="password">Contraseña</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password"
+                        placeholder="••••••••" required>
+                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                </div>
+
+                <button type="submit" class="login-btn">Ingresar</button>
+            </form>
+
+            <!-- ================================ -->
+            <!-- FORM REGISTRO -->
+            <!-- ================================ -->
+            <form id="register-form" style="display: none;">
+
+                <h3 class="register-title">Regístrate</h3>
+
+                <label for="reg-email">Correo Institucional</label>
+                <input type="email" id="reg-email"
+                    placeholder="usuario@um.edu.mx" required>
+
+                <label for="reg-password">Contraseña</label>
+                <div class="password-wrapper">
+                    <input type="password" id="reg-password"
+                        placeholder="••••••••" required>
+                    <i class="fa-solid fa-eye" id="toggleRegPassword"></i>
+                </div>
+
+                <!-- Selector de rol -->
+                <label>Selecciona tu rol</label>
+                <div class="role-selector">
+                    <button type="button" class="role-btn" data-role="usuario">Usuario</button>
+                    <button type="button" class="role-btn" data-role="admin">Administrador</button>
+                </div>
+                <input type="hidden" id="reg-role" value="">
+
+                <button type="submit" class="login-btn">Crear Cuenta</button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+
+</html>
