@@ -1,7 +1,7 @@
 USE OficinaPaqueteria
 GO
 --===================================
---ATENCION !!! LEER LOS COMENTARIOS. GUIA BACICA PARA DESARROLLAR LA BASE DE DATOS !!!! UCIEL LE ESTO PLIS PORFAVOR
+--ATENCION !!! LEER LOS COMENTARIOS. GUIA BACICA PARA DESARROLLAR El BACKEND !!!! UCIEL LE ESTO PLIS PORFAVOR
 --===================================
 
 
@@ -371,3 +371,4 @@ EXEC sp_ValidarLogin 'admin_test', '123';
 EXEC sp_ValidarLogin 'cliente_test', '123';
 -- Debería devolver UNA TABLA VACÍA (0 filas)
 EXEC sp_ValidarLogin 'admin_test', 'pass_falso'; --El login falla por datos falsos
+
