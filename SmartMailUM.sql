@@ -5,7 +5,7 @@ GO
 IF OBJECT_ID('dbo.UsuariosAdmin', 'U') IS NOT NULL DROP TABLE dbo.UsuariosAdmin;
 CREATE TABLE [dbo].[UsuariosAdmin](
 	IdAdmin int IDENTITY(1,1) PRIMARY KEY,
-	NombreReceptor varchar(250) NOT NULL, -- Corregí 'Reseptor' a 'Receptor'
+	NombreReceptor varchar(250) NOT NULL,
     Activo bit DEFAULT 1
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE [dbo].[Delivery_Master](
 	NumDeGuia varchar(150) UNIQUE NOT NULL,
 	Matricula int NOT NULL,
 	Paqueteria varchar(100),
-	NombreDelivery varchar(250), -- Aquí guardaremos el "Proveedor" o "Remitente"
+	NombreDelivery varchar(250), -- AquÃ­ guardaremos el "Proveedor" o "Remitente"
 	
     -- Facilidades de almacenamiento
     Anaquel varchar(50),
@@ -57,12 +57,12 @@ SELECT
 	dm.FechaEntrada,
 	dm.IdAdmin
 FROM [dbo].[Delivery_Master] as dm
-INNER JOIN [dbo].[UsuariosCliente] AS uc -- Corregido: antes decías 'AS us' pero usabas 'uc'
+INNER JOIN [dbo].[UsuariosCliente] AS uc -- Corregido: antes decÃ­as 'AS us' pero usabas 'uc'
 	ON dm.Matricula = uc.Matricula
 WHERE dm.Estado = 'EN OFICINA';
 GO
 
---------------VISTA DE HISTORIAL DE SALIDAS (Opcional, pero útil)--------------------
+--------------VISTA DE HISTORIAL DE SALIDAS (Opcional, pero Ãºtil)--------------------
 IF OBJECT_ID('dbo.DeliveryOutStock', 'V') IS NOT NULL DROP VIEW dbo.DeliveryOutStock;
 GO
 CREATE VIEW [dbo].[DeliveryOutStock] AS
@@ -74,7 +74,7 @@ SELECT
 	dm.Paqueteria,
     dm.NombreDelivery,
 	dm.FechaEntrada,
-    dm.FechaEntrega,   -- Importante ver cuándo salió
+    dm.FechaEntrega,   -- Importante ver cuÃ¡ndo saliÃ³
 	dm.IdAdmin
 FROM [dbo].[Delivery_Master] as dm
 INNER JOIN [dbo].[UsuariosCliente] AS uc
@@ -109,7 +109,7 @@ BEGIN
 
     -- Variables para recibir datos del formulario
 	DECLARE @NombreBusqueda varchar(250);
-    DECLARE @MatriculaEncontrada int;
+Â  Â  DECLARE @MatriculaEncontrada int;
     
     -- Variables mapeadas a la tabla
     DECLARE @NumDeGuia varchar(150);
@@ -119,8 +119,8 @@ BEGIN
     DECLARE @Ubicacion varchar(150);
     DECLARE @IdAdmin int;
     DECLARE @FechaRecibido datetime;
-    
-    -- Leemos los datos que envía la App/Web
+Â  Â Â 
+    -- Leemos los datos que envÃ­a la App/Web
 	SELECT 
         @NombreBusqueda = NombreDestinatario,
         @NumDeGuia = NumDeGuia,
@@ -132,7 +132,7 @@ BEGIN
         @FechaRecibido = FechaEntrada      -- "Fecha Recibido" en el form
     FROM inserted;
 
-    -- Buscamos la matrícula
+    -- Buscamos la matrÃ­cula
 	SELECT @MatriculaEncontrada = Matricula
 	FROM [dbo].[UsuariosCliente]
 	WHERE NombreDestinatario = @NombreBusqueda;
@@ -164,22 +164,23 @@ BEGIN
 	ELSE
 	BEGIN
         -- Mensaje de error formateado
-		RAISERROR ('Error: El usuario "%s" no está registrado. Por favor verifique el nombre o regístrelo primero.', 16, 1, @NombreBusqueda);
-    END
+		RAISERROR ('Error: El usuario "%s" no estÃ¡ registrado. Por favor verifique el nombre o regÃ­strelo primero.', 16, 1, @NombreBusqueda);
+Â  Â  END
 END;
+
 GO
 
-------------------------------Insercion de Datos para Simulación------------------------------
+------------------------------Insercion de Datos para SimulaciÃ³n------------------------------
 INSERT INTO UsuariosAdmin (NombreReceptor, Activo)
 VALUES 
-('Bequer Quiroga', 1),  -- Tendrá IdAdmin = 1
-('María González', 1),  -- Tendrá IdAdmin = 2
-('Roberto Admin', 1);   -- Tendrá IdAdmin = 3
+('Bequer Quiroga', 1),  -- TendrÃ¡ IdAdmin = 1
+('MarÃ­a GonzÃ¡lez', 1),  -- TendrÃ¡ IdAdmin = 2
+('Roberto Admin', 1);   -- TendrÃ¡ IdAdmin = 3
 GO
 
 INSERT INTO UsuariosCliente (Matricula, NombreDestinatario, Residencia, Telefono)
 VALUES 
-(123001, 'Ana López', 'INTERNO', '811-111-2222'),
+(123001, 'Ana LÃ³pez', 'INTERNO', '811-111-2222'),
 (123002, 'Carlos Ruiz', 'EXTERNO', '811-333-4444'),
 (123003, 'Diana Prince', 'INTERNO', '811-555-6666'),
 (123004, 'Bruce Wayne', 'EXTERNO', '811-777-8888'),
@@ -190,22 +191,22 @@ GO
 INSERT INTO DeliveryInStock 
 (FechaEntrada, Paqueteria, NumDeGuia, NombreDestinatario, IdAdmin, NombreDelivery, Anaquel, Ubicacion)
 VALUES 
-(GETDATE(), 'Amazon', 'AMZN-998877', 'Ana López', 1, 'Logistics AMZ', 'A1', 'Recepción Central');
+(GETDATE(), 'Amazon', 'AMZN-998877', 'Ana LÃ³pez', 1, 'Logistics AMZ', 'A1', 'RecepciÃ³n Central');
 
 INSERT INTO DeliveryInStock 
 (FechaEntrada, Paqueteria, NumDeGuia, NombreDestinatario, IdAdmin, NombreDelivery, Anaquel, Ubicacion)
 VALUES 
-(GETDATE(), 'DHL', 'DHL-123456789', 'Carlos Ruiz', 2, 'Repartidor José', 'B3', 'Bodega Externa');
+(GETDATE(), 'DHL', 'DHL-123456789', 'Carlos Ruiz', 2, 'Repartidor JosÃ©', 'B3', 'Bodega Externa');
 
 INSERT INTO DeliveryInStock 
 (Paqueteria, NumDeGuia, NombreDestinatario, IdAdmin, NombreDelivery, Anaquel, Ubicacion)
 VALUES 
-('Mercado Libre', 'ML-MX-555666', 'Diana Prince', 1, 'Repartidor ML', 'C2', 'Estante Pequeños');
+('Mercado Libre', 'ML-MX-555666', 'Diana Prince', 1, 'Repartidor ML', 'C2', 'Estante PequeÃ±os');
 
 INSERT INTO DeliveryInStock 
 (FechaEntrada, Paqueteria, NumDeGuia, NombreDestinatario, IdAdmin, NombreDelivery, Anaquel, Ubicacion)
 VALUES 
-(GETDATE(), 'FedEx', 'FDX-000111222', 'Bruce Wayne', 3, 'Camión 45', 'A2', 'Recepción Central');
+(GETDATE(), 'FedEx', 'FDX-000111222', 'Bruce Wayne', 3, 'CamiÃ³n 45', 'A2', 'RecepciÃ³n Central');
 
 GO
 
